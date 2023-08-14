@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/images/lws-logo-light.svg";
 import Error from "../components/ui/Error";
 import { useRegisterUserMutation } from "../features/auth/authApi";
 
 export default function Register() {
+  const navigate = useNavigate();
   const [registrationInfo, setRegistrationInfo] = useState({});
   const handleInputChange = (e) => {
     setRegistrationInfo((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
   };
 
-  const [registerUser, { isError, isSuccess }] = useRegisterUserMutation();
+  const [registerUser, { isError, isSuccess, isLoading }] = useRegisterUserMutation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +22,12 @@ export default function Register() {
     delete registrationInfo.confirmPassword;
     registerUser(registrationInfo);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/inbox");
+    }
+  }, [isSuccess, navigate]);
 
   return (
     <div className="grid place-items-center h-screen bg-[#F9FAFB">
@@ -106,13 +113,14 @@ export default function Register() {
 
             <div>
               <button
+                disabled={isLoading}
                 type="submit"
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-violet-600 hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
                 Sign up
               </button>
             </div>
-            {isSuccess && <Navigate to="/" />}
+
             {isError && <Error message="Something Went Wrong" />}
           </form>
         </div>
