@@ -14,6 +14,7 @@ const authSlice = createSlice({
       state.user = actions.payload.user;
     },
     userLoggedOut: (state) => {
+      localStorage.removeItem("auth");
       state.accessToken = undefined;
       state.user = undefined;
     },
