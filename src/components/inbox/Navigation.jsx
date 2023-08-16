@@ -7,6 +7,7 @@ export default function Navigation() {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(userLoggedOut());
+    localStorage.removeItem("auth");
   };
 
   return (
@@ -18,7 +19,9 @@ export default function Navigation() {
           </Link>
           <ul>
             <li className="text-white">
-              <button onClick={handleLogout}>Logout</button>
+              <button className="cursor-pointer" onClick={handleLogout}>
+                Logout
+              </button>
             </li>
           </ul>
         </div>
